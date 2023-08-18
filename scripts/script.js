@@ -4,7 +4,7 @@ Tu principal objetivo aquí es tener el menor código global posible. Trata de e
 
 //NÚMEROS DE JUGADORES --> 1 y 2
 
-//IDENTIFICACIÓN DE FICHAS --> 0 (ninguna), 1 (player1), 2 (player2)
+//IDENTIFICACIÓN DE FICHAS --> "" (ninguna), X (player1), O (player2)
 
 
 
@@ -14,12 +14,13 @@ function Player(number) {   // Factory Function
     
   let name = prompt("Introduce tu nombre");
   let score = 0;
+  let active = false;
 
   function getName() {
     return name;
   }
 
-  function addPoint() {
+  function setPoints() {
     score++;
   }
 
@@ -27,9 +28,17 @@ function Player(number) {   // Factory Function
     return score;
   }
 
+  function setActive() {
+    active = !active;
+  }
+
+  function getActive() {
+    return active;
+  }
+
   return {
     getName,
-    addPoint,
+    setPoints,
     getPoints,
   };
 }
@@ -37,45 +46,68 @@ function Player(number) {   // Factory Function
 
 //---------------------------------GAMEBOARD---------------------------------
 
-const Gameboard = function() {   // Module Pattern
+const Gameboard = function(player1, player2) {   // Module Pattern
     
   const gameBoard = [
-    [0, 0, 0], 
-    [0, 0, 0], 
-    [0, 0, 0]
+    ["", "", ""], 
+    ["", "", ""], 
+    ["", "", ""]
   ];
+
+  const containerUI = document.querySelector(".container");
+  
+  const gameBoardUI = document.createElement("div");
+  
+  gameBoardUI.classList.add("gameboard");
     
-  function printGameboard() {
+  function printArray() {
     for (let i = 0; i < 3; i++) {
       console.log(gameBoard[i]);
     }
-  } 
-
-  function insertPiece(numberOfPlayer, row, column) {
-    gameBoard[row][column] = numberOfPlayer;
   }
-
-  function resetGameBoard() {
+  
+  function createGameBoardUI() {
     for (let i = 0; i < 3; i++) {
-      gameBoard[i].fill(0);
+      for (let j = 0; j < 3; j++) {
+        const cellUI = document.createElement("button");
+        cellUI.classList.add("cell");
+        cellUI.setAttribute("data-row", i.toString());
+        cellUI.setAttribute("data-column", j.toString());
+        cellUI.value = gameBoard[i][j];
+        cellUI.textContent = cellUI.value;
+        cellUI.addEventListener("click", () => {
+          if (isThereAPiece(i, j)) {
+            return;
+          }
+          else {
+            insertPiece(playerActive, i, j);
+        }});
+        gameBoardUI.appendChild(cellUI);
+      }
     }
+    containerUI.appendChild(gameBoardUI);
   }
 
   function isThereAPiece(row, column) {
-    if (gameBoard[row][column] !== 0) {
-      return false;
-    }
-    else {
-      return true;
+    return (gameBoard[row][column] !== "") ? true : false;
+  }
+
+  function insertPiece(numberOfPlayer, row, column) {
+    gameBoard[row][column] = (numberOfPlayer === 1) ? "X" : "O";
+  }
+
+  function resetArray() {
+    for (let i = 0; i < 3; i++) {
+      gameBoard[i].fill("O");
     }
   }
 
   function checkRow(row) {   //una fila es un array unidimensional
     let result = false;
-    if (gameBoard[row].every(element => element === 1)) {
+    if (gameBoard[row].every(element => element === "X")) {
       result = true;
     }
-    else if (gameBoard[row].every(element => element === 2)) {
+    else if (gameBoard[row].every(element => element === "O")) {
       result = true;
     }
     return result;
@@ -87,10 +119,10 @@ const Gameboard = function() {   // Module Pattern
     for (let i = 0; i < 3; i++) {
       auxArray.push(gameBoard[i][column]);
     }
-    if (auxArray.every(element => element === 1)) {
+    if (auxArray.every(element => element === "X")) {
       result = true;
     }
-    else if (auxArray.every(element => element === 2)) {
+    else if (auxArray.every(element => element === "O")) {
       result = true;
     }
     return result;
@@ -102,10 +134,10 @@ const Gameboard = function() {   // Module Pattern
     for (let i = 0; i < 3; i++) {
       auxArray.push(gameBoard[i][i]);
     }
-    if (auxArray.every(element => element === 1)) {
+    if (auxArray.every(element => element === "X")) {
       result = true;
     }
-    else if (auxArray.every(element => element === 2)) {
+    else if (auxArray.every(element => element === "O")) {
       result = true;
     }
     return result;
@@ -117,10 +149,10 @@ const Gameboard = function() {   // Module Pattern
     for (let i = 0, j = 2; i < 3; i++, j--) {
       auxArray.push(gameBoard[i][j]);
     }
-    if (auxArray.every(element => element === 1)) {
+    if (auxArray.every(element => element ==="X")) {
       result = true;
     }
-    else if (auxArray.every(element => element === 2)) {
+    else if (auxArray.every(element => element === "O")) {
       result = true;
     }
     return result;
@@ -132,22 +164,22 @@ const Gameboard = function() {   // Module Pattern
     for (let i = 0; i < 3; i++) {
       if (checkRow(i)) {
         result = true;
-        player = gameBoard[i][0];
+        player = (gameBoard[i][0] === "X") ? 1 : 2;
         break;
       }
       if (checkColumn(i)) {
         result = true;
-        player = gameBoard[0][i];
+        player = (gameBoard[0][i] === "X")  ? 1 : 2;
         break;
       }
       if (checkXLeftStart()) {
         result = true;
-        player = gameBoard[0][0];
+        player = (gameBoard[0][0] === "X") ? 1 : 2;
         break;
       }
       if (checkXRightStart()) {
         result = true;
-        player = gameBoard[2][2];
+        player = (gameBoard[2][2] === "X")  ? 1 : 2;
         break;
       }
     }
@@ -162,32 +194,31 @@ const Gameboard = function() {   // Module Pattern
   }
 
   return {
-    printGameboard,
-    insertPiece,
-    resetGameBoard,
+    printArray,
+    printGameBoardUI,
     isThereAPiece,
+    insertPiece,
+    resetArray,
     isThereAWinner,
     whoWin,
-  }
+  };
 
 };
 
-
-//---------------------------------------------------
-
-function playRound(player1, player2) {
-  
-}
 
 //--------------------------MAIN-----------------------------
 
 
 function main() {
-  let player1 = Player(1);
-  let player2 = Player(2);
-  let gameBoard = Gameboard();
+  
+  const player1 = Player(1);
+  const player2 = Player(2);
+  const gameboard = Gameboard(player1, player2);
 
-  playRound(player1, player2);
+  const gameBoardContainer = document.querySelector(".gameboard");
+  
+  
+
 };
 
 main();
