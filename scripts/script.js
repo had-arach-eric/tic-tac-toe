@@ -7,20 +7,20 @@ Tu principal objetivo aquí es tener el menor código global posible. Trata de e
 //IDENTIFICACIÓN DE FICHAS --> "" (ninguna), X (player1), O (player2)
 
 
+let playerActive = 1;
+
 
 //---------------------------------PLAYER---------------------------------
 
-function Player(number) {   // Factory Function
+function Player(name, number) {   // Factory Function
     
-  let name = prompt("Introduce tu nombre");
   let score = 0;
-  let active = false;
 
   function getName() {
     return name;
   }
 
-  function setPoints() {
+  function addPoint() {
     score++;
   }
 
@@ -28,25 +28,22 @@ function Player(number) {   // Factory Function
     return score;
   }
 
-  function setActive() {
-    active = !active;
-  }
-
-  function getActive() {
-    return active;
+  function resetPoints() {
+    score = 0;
   }
 
   return {
     getName,
-    setPoints,
+    addPoint,
     getPoints,
+    resetPoints,
   };
 }
 
 
 //---------------------------------GAMEBOARD---------------------------------
 
-const Gameboard = function(player1, player2) {   // Module Pattern
+const Tabla = function(player1, player2) {   // Module Pattern
     
   const gameBoard = [
     ["", "", ""], 
@@ -54,11 +51,9 @@ const Gameboard = function(player1, player2) {   // Module Pattern
     ["", "", ""]
   ];
 
-  const containerUI = document.querySelector(".container");
+  const bodyUI = document.querySelector("body");
   
-  const gameBoardUI = document.createElement("div");
-  
-  gameBoardUI.classList.add("gameboard");
+  const gameBoardUI = document.querySelector(".gameboard");
     
   function printArray() {
     for (let i = 0; i < 3; i++) {
@@ -66,7 +61,7 @@ const Gameboard = function(player1, player2) {   // Module Pattern
     }
   }
   
-  function createGameBoardUI() {
+  /*function createGameBoardUI() {
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
         const cellUI = document.createElement("button");
@@ -86,7 +81,7 @@ const Gameboard = function(player1, player2) {   // Module Pattern
       }
     }
     containerUI.appendChild(gameBoardUI);
-  }
+  }*/
 
   function isThereAPiece(row, column) {
     return (gameBoard[row][column] !== "") ? true : false;
@@ -94,12 +89,7 @@ const Gameboard = function(player1, player2) {   // Module Pattern
 
   function insertPiece(numberOfPlayer, row, column) {
     gameBoard[row][column] = (numberOfPlayer === 1) ? "X" : "O";
-  }
-
-  function resetArray() {
-    for (let i = 0; i < 3; i++) {
-      gameBoard[i].fill("O");
-    }
+    console.log(gameBoard);
   }
 
   function checkRow(row) {   //una fila es un array unidimensional
@@ -189,18 +179,40 @@ const Gameboard = function(player1, player2) {   // Module Pattern
     };
   }
 
-  function whoWin() {
-    return isThereAWinner().player;
+  function resetArray() {
+    for (let i = 0; i < 3; i++) {
+      gameBoard[i].fill("");
+    }
+    console.log(gameBoard);
+  }
+
+  function handlePressCell(e) {
+    let row = e.target.dataset.row;
+    let column = e.target.dataset.column;
+
+    if (isThereAPiece(row, column) === false) {
+      insertPiece(playerActive, row, column);
+      if (isThereAWinner.result === true) {
+        console.log(`Ganó el jugador número ${playerActive}`);
+      }
+    }
+  }
+
+  function handleResetGame() {
+    playerActive = 1;
+    resetArray();
   }
 
   return {
     printArray,
-    printGameBoardUI,
+    //printGameBoardUI,
     isThereAPiece,
     insertPiece,
     resetArray,
     isThereAWinner,
-    whoWin,
+    handlePressCell,
+    handleResetGame,
+    //whoWin,
   };
 
 };
@@ -211,13 +223,20 @@ const Gameboard = function(player1, player2) {   // Module Pattern
 
 function main() {
   
-  const player1 = Player(1);
-  const player2 = Player(2);
-  const gameboard = Gameboard(player1, player2);
+  const player1 = Player("Eric", 1);
+  const player2 = Player("Pep", 2);
+  const tabla = Tabla(player1, player2);
 
-  const gameBoardContainer = document.querySelector(".gameboard");
-  
-  
+  const gameBoardUI = document.querySelector(".tabla");
+  const resetGameUI = document.querySelector(".reset-game");
+  const player1PointsUI = document.querySelector(".player1-points");
+  const player2PointsUI = document.querySelector(".player2-points");
+
+  for (let i = 0; i < 9; i++) {
+    gameBoardUI.children[i].addEventListener("click", tabla.handlePressCell);
+  }
+
+  resetGameUI.addEventListener("click", tabla.handleResetGame);
 
 };
 
