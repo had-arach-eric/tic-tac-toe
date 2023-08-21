@@ -6,12 +6,16 @@ export const Gameboard = function(player1, player2) {   // Module Pattern
     ["", "", ""]
   ];
 
-  
-    
+  function getValuePosition(row, column) {
+    return gameBoard[row][column];
+  }
+
   function printArray() {
+    console.log("----------------");
     for (let i = 0; i < 3; i++) {
       console.log(gameBoard[i]);
     }
+    console.log("----------------");
   }
 
   function isThereAPiece(row, column) {
@@ -20,7 +24,7 @@ export const Gameboard = function(player1, player2) {   // Module Pattern
 
   function insertPiece(numberOfPlayer, row, column) {
     gameBoard[row][column] = (numberOfPlayer === 1) ? "X" : "O";
-    console.log(gameBoard);
+    printArray();
   }
 
   function checkRow(row) {   //una fila es un array unidimensional
@@ -117,19 +121,12 @@ export const Gameboard = function(player1, player2) {   // Module Pattern
     console.log(gameBoard);
   }
 
-  function handleResetGame() {
-    playerActive = 1;
-    resetArray();
-  }
-
   return {
     printArray,
-    //printGameBoardUI,
     isThereAPiece,
     insertPiece,
     resetArray,
     isThereAWinner,
-    //whoWin,
+    getValuePosition,
   };
-
 };
