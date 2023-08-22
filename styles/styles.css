@@ -29,8 +29,8 @@ body {
 .cell {
   width: 20vmin;
   height: 20vmin;
-  min-width: 50px;
-  min-height: 50px;
+  min-width: 100px;
+  min-height: 100px;
   font-size: 10vmin;
   background-color: #e3c2c2;
 }
