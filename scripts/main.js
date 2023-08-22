@@ -8,9 +8,6 @@ import { GameboardUI } from "./gameboard-ui.js";
   const player2 = Player(2);
   const gameboard = Gameboard(player1, player2);
   const gameBoardUI = GameboardUI(gameboard, player1, player2);
-
-  let playerActive = 1;
-
 })();
 
 

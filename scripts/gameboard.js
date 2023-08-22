@@ -24,7 +24,6 @@ export const Gameboard = function(player1, player2) {   // Module Pattern
 
   function insertPiece(numberOfPlayer, row, column) {
     gameBoard[row][column] = (numberOfPlayer === 1) ? "X" : "O";
-    printArray();
   }
 
   function checkRow(row) {   //una fila es un array unidimensional
@@ -85,27 +84,27 @@ export const Gameboard = function(player1, player2) {   // Module Pattern
 
   function isThereAWinner() {   //retorna objeto con resultado y jugador
     let result = false;
-    let player = -1;
-    for (let i = 0; i < 3; i++) {
-      if (checkRow(i)) {
-        result = true;
-        player = (gameBoard[i][0] === "X") ? 1 : 2;
-        break;
-      }
-      if (checkColumn(i)) {
-        result = true;
-        player = (gameBoard[0][i] === "X")  ? 1 : 2;
-        break;
-      }
-      if (checkXLeftStart()) {
-        result = true;
-        player = (gameBoard[0][0] === "X") ? 1 : 2;
-        break;
-      }
-      if (checkXRightStart()) {
-        result = true;
-        player = (gameBoard[2][2] === "X")  ? 1 : 2;
-        break;
+    let player;
+    if (checkXLeftStart()) {
+      result = true;
+      player = (gameBoard[0][0] === "X") ? 1 : 2;
+    }
+    else if (checkXRightStart()) {
+      result = true;
+      player = (gameBoard[2][2] === "X")  ? 1 : 2;
+    }
+    else {
+      for (let i = 0; i < 3; i++) {
+        if (checkRow(i)) {
+          result = true;
+          player = (gameBoard[i][0] === "X") ? 1 : 2;
+          break;
+        }
+        if (checkColumn(i)) {
+          result = true;
+          player = (gameBoard[0][i] === "X")  ? 1 : 2;
+          break;
+        }
       }
     }
     return {
@@ -122,11 +121,11 @@ export const Gameboard = function(player1, player2) {   // Module Pattern
   }
 
   return {
+    getValuePosition,
     printArray,
     isThereAPiece,
     insertPiece,
-    resetArray,
     isThereAWinner,
-    getValuePosition,
+    resetArray,
   };
 };

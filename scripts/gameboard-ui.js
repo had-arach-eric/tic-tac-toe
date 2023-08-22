@@ -1,9 +1,16 @@
+import { Information } from "./information-ui.js";
+
 export const GameboardUI = function(gameboard, player1, player2) {
+  
   const gameBoardUI = document.querySelector(".gameboard");
   const buttonResetUI = document.querySelector(".reset-button");
+  const information = Information(player1, player2);
+
   let isEditable = true;
 
-  function setFontColor(val, cell) {
+  information.setPlayersNamesUI();
+
+  function setFontColor(val, cell) {  //BIEN
     if (val === "X") {
       cell.style.color = "green";
     }
@@ -44,12 +51,11 @@ export const GameboardUI = function(gameboard, player1, player2) {
   function handlePressCell(e) {
     let row = e.target.dataset.row;
     let column = e.target.dataset.column;
-    console.log("entro");
     if (gameboard.isThereAPiece(row, column) === false) {
       let numPlayerActive = (player1.getActive()) ? 1 : 2;
       gameboard.insertPiece(numPlayerActive, row, column);
-      player1.setActive();
-      player2.setActive();
+      player1.turnActive();
+      player2.turnActive();
       printGameBoardUI();
       if (gameboard.isThereAWinner().result === true) {
         let winner = gameboard.isThereAWinner().player;
@@ -57,6 +63,15 @@ export const GameboardUI = function(gameboard, player1, player2) {
         //gameboard.resetArray();
         changeEdition();
         printGameBoardUI();
+        if (winner === 1) {
+          player1.addOnePoint();
+        }
+        else {
+          player2.addOnePoint();
+        }
+        console.log(`Puntos del jugador 1: ${player1.getPoints()}`);
+        console.log(`Puntos del jugador 2: ${player2.getPoints()}`);
+        information.setPlayersPointsUI(player1.getPoints(), player2.getPoints());
       }
     }
   }
@@ -65,6 +80,8 @@ export const GameboardUI = function(gameboard, player1, player2) {
     gameboard.resetArray();
     setEditable();
     printGameBoardUI();
+    player1.setActive();
+    player2.setActive();
   }
 
   for (let i = 0; i < 9; i++) {
@@ -75,5 +92,5 @@ export const GameboardUI = function(gameboard, player1, player2) {
 
   return {
     printGameBoardUI,
-  }
-}
+  };
+};

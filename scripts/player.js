@@ -1,14 +1,18 @@
 export function Player(number) {   // Factory Function
-  
+  let name = prompt(`Enter the name of the player number ${number}`);
   let score = 0;
   let isActive = (number === 1) ? true : false;
 
-  /*function getName() {
+  function getName() {
     return name;
-  }*/
+  }
 
   function addOnePoint() {
     score++;
+  }
+
+  function setPoints(points) {
+    score = points;
   }
 
   function getPoints() {
@@ -19,8 +23,16 @@ export function Player(number) {   // Factory Function
     score = 0;
   }
 
-  function setActive() {
+  function turnActive() {
     isActive = !isActive;
+  }
+
+  function setActive() {
+    isActive = true;
+  }
+
+  function setInactive() {
+    isActive = false;
   }
 
   function getActive() {
@@ -28,10 +40,14 @@ export function Player(number) {   // Factory Function
   }
 
   return {
+    getName,
     addOnePoint,
     getPoints,
+    setPoints,
     resetPoints,
+    turnActive,
     setActive,
+    setInactive,
     getActive,
   };
-}
+};
