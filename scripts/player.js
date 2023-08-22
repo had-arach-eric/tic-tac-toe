@@ -1,4 +1,5 @@
 export function Player(number) {   // Factory Function
+  
   let name = prompt(`Enter the name of the player number ${number}`);
   let score = 0;
   let isActive = (number === 1) ? true : false;
