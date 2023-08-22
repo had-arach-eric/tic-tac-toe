@@ -7,7 +7,7 @@ export const Information = function(player1, player2) {
     player2Name.textContent = `${player2.getName()}: `;
   }
 
-  function setPlayersPointsUI(player1Score, player2Score) {
+  function setPlayersPointsUI(player1Score, player2Score) { //BIEN
     const player1ScoreUI = document.querySelector(".player1-points");
     const player2ScoreUI = document.querySelector(".player2-points");
     player1ScoreUI.textContent = player1Score.toString();
