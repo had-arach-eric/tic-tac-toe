@@ -1,4 +1,4 @@
-export const Gameboard = function(player1, player2) {   // Module Pattern
+export const Gameboard = function(player1, player2) {   //Factory Function
     
   const gameBoard = [
     ["", "", ""], 
@@ -26,7 +26,7 @@ export const Gameboard = function(player1, player2) {   // Module Pattern
     gameBoard[row][column] = (numberOfPlayer === 1) ? "X" : "O";
   }
 
-  function checkRow(row) {   //una fila es un array unidimensional
+  function checkRow(row) {   //a row is a one-dimensional array
     let result = false;
     if (gameBoard[row].every(element => element === "X")) {
       result = true;
@@ -37,7 +37,7 @@ export const Gameboard = function(player1, player2) {   // Module Pattern
     return result;
   }
 
-  function checkColumn(column) {   //una columna es la misma posición de 3 arrays distintos
+  function checkColumn(column) {   //a column is the same position of 3 different arrays
     let result = false;
     let auxArray = [];
     for (let i = 0; i < 3; i++) {
@@ -82,7 +82,7 @@ export const Gameboard = function(player1, player2) {   // Module Pattern
     return result;
   }
 
-  function isThereAWinner() {   //retorna objeto con resultado y jugador
+  function isThereAWinner() {   //return object with result and player
     let result = false;
     let player;
     if (checkXLeftStart()) {
@@ -91,7 +91,7 @@ export const Gameboard = function(player1, player2) {   // Module Pattern
     }
     else if (checkXRightStart()) {
       result = true;
-      player = (gameBoard[2][2] === "X")  ? 1 : 2;
+      player = (gameBoard[0][2] === "X")  ? 1 : 2;
     }
     else {
       for (let i = 0; i < 3; i++) {
@@ -117,7 +117,6 @@ export const Gameboard = function(player1, player2) {   // Module Pattern
     for (let i = 0; i < 3; i++) {
       gameBoard[i].fill("");
     }
-    console.log(gameBoard);
   }
 
   return {

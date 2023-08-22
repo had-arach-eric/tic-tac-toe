@@ -1,6 +1,6 @@
 import { Information } from "./information-ui.js";
 
-export const GameboardUI = function(gameboard, player1, player2) {
+export const GameboardUI = function(gameboard, player1, player2) { 
   
   const gameBoardUI = document.querySelector(".gameboard");
   const buttonResetUI = document.querySelector(".reset-button");
@@ -10,7 +10,7 @@ export const GameboardUI = function(gameboard, player1, player2) {
 
   information.setPlayersNamesUI();
 
-  function setFontColor(val, cell) {  //BIEN
+  function setFontColor(val, cell) {
     if (val === "X") {
       cell.style.color = "green";
     }
@@ -56,23 +56,18 @@ export const GameboardUI = function(gameboard, player1, player2) {
       gameboard.insertPiece(numPlayerActive, row, column);
       player1.turnActive();
       player2.turnActive();
-      printGameBoardUI();
       if (gameboard.isThereAWinner().result === true) {
         let winner = gameboard.isThereAWinner().player;
-        console.log(`Ganó el jugador número ${winner}`);
-        //gameboard.resetArray();
         changeEdition();
-        printGameBoardUI();
         if (winner === 1) {
           player1.addOnePoint();
         }
         else {
           player2.addOnePoint();
         }
-        console.log(`Puntos del jugador 1: ${player1.getPoints()}`);
-        console.log(`Puntos del jugador 2: ${player2.getPoints()}`);
         information.setPlayersPointsUI(player1.getPoints(), player2.getPoints());
       }
+      printGameBoardUI();
     }
   }
 
@@ -81,7 +76,7 @@ export const GameboardUI = function(gameboard, player1, player2) {
     setEditable();
     printGameBoardUI();
     player1.setActive();
-    player2.setActive();
+    player2.setInactive();
   }
 
   for (let i = 0; i < 9; i++) {
@@ -89,8 +84,4 @@ export const GameboardUI = function(gameboard, player1, player2) {
   }
 
   buttonResetUI.addEventListener("click", handleResetButtonUI);
-
-  return {
-    printGameBoardUI,
-  };
 };
